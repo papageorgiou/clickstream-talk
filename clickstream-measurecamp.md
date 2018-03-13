@@ -163,14 +163,33 @@ clsdf %>% rename(user_path=cls_complete) %>%
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq)) %>% 
   slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>%  
-  datatable()
+  mutate_if(is.numeric, round, digits=3)
 ```
 
-<!--html_preserve-->
+    ## # A tibble: 20 x 3
+    ##    user_path                   n    freq
+    ##    <chr>                   <dbl>   <dbl>
+    ##  1 About,Defer              791. 0.0790 
+    ##  2 Home,Defer               587. 0.0590 
+    ##  3 Catalog,About,Defer      308. 0.0310 
+    ##  4 Prod_2,Defer             285. 0.0280 
+    ##  5 Home,About,Defer         176. 0.0180 
+    ##  6 Prod_1,About,Defer       167. 0.0170 
+    ##  7 Prod_3,About,Defer       151. 0.0150 
+    ##  8 Prod_3,Buy               140. 0.0140 
+    ##  9 Prod_1,Defer             139. 0.0140 
+    ## 10 Prod_2,About,Defer       134. 0.0130 
+    ## 11 Catalog,Prod_2,Defer     118. 0.0120 
+    ## 12 Prod_4,Defer             110. 0.0110 
+    ## 13 Prod_1,Buy                90. 0.00900
+    ## 14 Prod_4,Buy                84. 0.00800
+    ## 15 Home,Prod_2,Defer         83. 0.00800
+    ## 16 Prod_3,Defer              81. 0.00800
+    ## 17 Home,Prod_3,About,Defer   70. 0.00700
+    ## 18 Home,Prod_1,About,Defer   67. 0.00700
+    ## 19 Catalog,Prod_4,Defer      64. 0.00600
+    ## 20 Home,Prod_1,Defer         61. 0.00600
 
-<script type="application/json" data-for="htmlwidget-6956e4feee2f6f66156c">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"],["About,Defer","Home,Defer","Catalog,About,Defer","Prod_2,Defer","Home,About,Defer","Prod_1,About,Defer","Prod_3,About,Defer","Prod_3,Buy","Prod_1,Defer","Prod_2,About,Defer","Catalog,Prod_2,Defer","Prod_4,Defer","Prod_1,Buy","Prod_4,Buy","Home,Prod_2,Defer","Prod_3,Defer","Home,Prod_3,About,Defer","Home,Prod_1,About,Defer","Catalog,Prod_4,Defer","Home,Prod_1,Defer"],[791,587,308,285,176,167,151,140,139,134,118,110,90,84,83,81,70,67,64,61],[0.079,0.059,0.031,0.028,0.018,0.017,0.015,0.014,0.014,0.013,0.012,0.011,0.009,0.008,0.008,0.008,0.007,0.007,0.006,0.006]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>user_path<\/th>\n      <th>n<\/th>\n      <th>freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<!--/html_preserve-->
 common path to conversion
 -------------------------
 
@@ -181,14 +200,33 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
   ungroup %>%  
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq))  %>% slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>% 
-  datatable()
+  mutate_if(is.numeric, round, digits=3) 
 ```
 
-<!--html_preserve-->
+    ## # A tibble: 20 x 3
+    ##    page_sequence                 n    freq
+    ##    <chr>                     <dbl>   <dbl>
+    ##  1 Prod_3,Buy                 140. 0.100  
+    ##  2 Prod_1,Buy                  90. 0.0640 
+    ##  3 Prod_4,Buy                  84. 0.0600 
+    ##  4 Home,Prod_3,Buy             55. 0.0390 
+    ##  5 Catalog,Prod_4,Buy          53. 0.0380 
+    ##  6 Prod_1,Prod_3,Buy           38. 0.0270 
+    ##  7 Home,Prod_1,Buy             31. 0.0220 
+    ##  8 Catalog,Prod_3,Buy          26. 0.0180 
+    ##  9 Prod_1,Prod_4,Buy           24. 0.0170 
+    ## 10 Prod_4,Prod_3,Buy           24. 0.0170 
+    ## 11 Home,Prod_4,Buy             23. 0.0160 
+    ## 12 Prod_4,Prod_1,Buy           16. 0.0110 
+    ## 13 Catalog,Prod_4,Prod_3,Buy   13. 0.00900
+    ## 14 Home,Prod_1,Prod_3,Buy      11. 0.00800
+    ## 15 Prod_1,Prod_4,Prod_3,Buy    11. 0.00800
+    ## 16 Prod_2,Prod_1,Buy            9. 0.00600
+    ## 17 Catalog,Prod_1,Buy           8. 0.00600
+    ## 18 Prod_3,Prod_1,Buy            8. 0.00600
+    ## 19 Prod_3,Prod_4,Buy            8. 0.00600
+    ## 20 Home,Catalog,Prod_4,Buy      7. 0.00500
 
-<script type="application/json" data-for="htmlwidget-8896498d18bbda81c588">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"],["Prod_3,Buy","Prod_1,Buy","Prod_4,Buy","Home,Prod_3,Buy","Catalog,Prod_4,Buy","Prod_1,Prod_3,Buy","Home,Prod_1,Buy","Catalog,Prod_3,Buy","Prod_1,Prod_4,Buy","Prod_4,Prod_3,Buy","Home,Prod_4,Buy","Prod_4,Prod_1,Buy","Catalog,Prod_4,Prod_3,Buy","Home,Prod_1,Prod_3,Buy","Prod_1,Prod_4,Prod_3,Buy","Prod_2,Prod_1,Buy","Catalog,Prod_1,Buy","Prod_3,Prod_1,Buy","Prod_3,Prod_4,Buy","Home,Catalog,Prod_4,Buy"],[140,90,84,55,53,38,31,26,24,24,23,16,13,11,11,9,8,8,8,7],[0.1,0.064,0.06,0.039,0.038,0.027,0.022,0.018,0.017,0.017,0.016,0.011,0.009,0.008,0.008,0.006,0.006,0.006,0.006,0.005]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>page_sequence<\/th>\n      <th>n<\/th>\n      <th>freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<!--/html_preserve-->
 common path to non-conversion
 =============================
 
@@ -199,14 +237,33 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
   ungroup %>%  
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq))  %>% slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>% 
-  datatable()
+  mutate_if(is.numeric, round, digits=3) 
 ```
 
-<!--html_preserve-->
+    ## # A tibble: 20 x 3
+    ##    page_sequence                  n    freq
+    ##    <chr>                      <dbl>   <dbl>
+    ##  1 About,Defer                 791. 0.0920 
+    ##  2 Home,Defer                  587. 0.0680 
+    ##  3 Catalog,About,Defer         308. 0.0360 
+    ##  4 Prod_2,Defer                285. 0.0330 
+    ##  5 Home,About,Defer            176. 0.0200 
+    ##  6 Prod_1,About,Defer          167. 0.0190 
+    ##  7 Prod_3,About,Defer          151. 0.0180 
+    ##  8 Prod_1,Defer                139. 0.0160 
+    ##  9 Prod_2,About,Defer          134. 0.0160 
+    ## 10 Catalog,Prod_2,Defer        118. 0.0140 
+    ## 11 Prod_4,Defer                110. 0.0130 
+    ## 12 Home,Prod_2,Defer            83. 0.0100 
+    ## 13 Prod_3,Defer                 81. 0.00900
+    ## 14 Home,Prod_3,About,Defer      70. 0.00800
+    ## 15 Home,Prod_1,About,Defer      67. 0.00800
+    ## 16 Catalog,Prod_4,Defer         64. 0.00700
+    ## 17 Home,Prod_1,Defer            61. 0.00700
+    ## 18 Prod_1,Prod_3,About,Defer    54. 0.00600
+    ## 19 Catalog,Prod_2,About,Defer   53. 0.00600
+    ## 20 Home,Prod_3,Defer            51. 0.00600
 
-<script type="application/json" data-for="htmlwidget-c5053dc1fcce31a68ca7">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"],["About,Defer","Home,Defer","Catalog,About,Defer","Prod_2,Defer","Home,About,Defer","Prod_1,About,Defer","Prod_3,About,Defer","Prod_1,Defer","Prod_2,About,Defer","Catalog,Prod_2,Defer","Prod_4,Defer","Home,Prod_2,Defer","Prod_3,Defer","Home,Prod_3,About,Defer","Home,Prod_1,About,Defer","Catalog,Prod_4,Defer","Home,Prod_1,Defer","Prod_1,Prod_3,About,Defer","Catalog,Prod_2,About,Defer","Home,Prod_3,Defer"],[791,587,308,285,176,167,151,139,134,118,110,83,81,70,67,64,61,54,53,51],[0.092,0.068,0.036,0.033,0.02,0.019,0.018,0.016,0.016,0.014,0.013,0.01,0.009,0.008,0.008,0.007,0.007,0.006,0.006,0.006]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>page_sequence<\/th>\n      <th>n<\/th>\n      <th>freq<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<!--/html_preserve-->
 clustering
 ==========
 

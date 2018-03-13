@@ -148,8 +148,7 @@ clsdf %>% rename(user_path=cls_complete) %>%
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq)) %>% 
   slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>%  
-  datatable()
+  mutate_if(is.numeric, round, digits=3)
 
 ```
 
@@ -163,8 +162,7 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
   ungroup %>%  
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq))  %>% slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>% 
-  datatable()
+  mutate_if(is.numeric, round, digits=3) 
 
 
 
@@ -182,8 +180,7 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
   ungroup %>%  
   mutate(freq=n/sum(n)) %>% 
   arrange(desc(freq))  %>% slice(1:20) %>% 
-  mutate_if(is.numeric, round, digits=3) %>% 
-  datatable()
+  mutate_if(is.numeric, round, digits=3) 
 
 ```
 
