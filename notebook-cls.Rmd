@@ -1,0 +1,353 @@
+---
+title: "Clickstrean Analytics - MeasureCamp #12"
+date: "17/3/2018"
+output: 
+  html_notebook: 
+    number_sections: yes
+    toc: yes
+    toc_float: true
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+
+# Set-up
+
+
+
+```{r message=FALSE, warning=FALSE, include=TRUE, warnings=F}
+library(tidyverse)
+library(clickstream)
+library(arulesSequences)
+library(DT)
+```
+
+
+
+#  Simulate Clickstream data
+
+
+* transition probablility matrix required as input
+* additonal parameters include the avg session length and the starting probs
+* the result is converted into a data frame for easier inspection
+
+
+##  Matrix with transition probs
+
+```{r}
+
+my_matrix = matrix(c(0.01, 0.09, 0.05, 0.21, 0.12, 0.17, 0.11, 0.24, 0.00,
+                     0.10, 0.00, 0.10, 0.00, 0.00, 0.00, 0.00, 0.80, 0.00,
+                     0.07, 0.18, 0.13, 0.05, 0.23, 0.08, 0.26, 0.00, 0.00,
+                     0.16, 0.14, 0.07, 0.00, 0.05, 0.22, 0.19, 0.10, 0.07,
+                     0.24, 0.17, 0.07, 0.13, 0.00, 0.03, 0.09, 0.26, 0.01,
+                     0.11, 0.18, 0.04, 0.15, 0.16, 0.00, 0.10, 0.11, 0.15,
+                     0.21, 0.07, 0.08, 0.20, 0.04, 0.18, 0.02, 0.12, 0.08,
+                     0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+                     0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00), nrow = 9 )
+
+```
+
+
+## Transition data frame
+
+```{r}
+
+
+
+transitions <-  t(my_matrix) %>% as.data.frame()
+
+colnames(transitions) <- c("Home", "About", "Catalog", "Prod_1", "Prod_2", "Prod_3", "Prod_4", "Defer", "Buy")
+
+rownames(transitions)<- c("Home", "About", "Catalog", "Prod_1", "Prod_2", "Prod_3", "Prod_4", "Defer", "Buy")
+
+
+print(transitions)
+
+```
+
+# Generate random clickstreams
+
+```{r }
+
+set.seed(123)
+
+
+
+cls <- randomClickstreams(states = c("Home", "About", "Catalog", "Prod_1", "Prod_2", "Prod_3", "Prod_4", "Defer", "Buy"),
+                          startProbabilities = c(0.25, 0.10, 0.2, 0.15, 0.1, 0.1, 0.1, 0, 0),
+                          transitionMatrix = my_matrix,
+                          meanLength = 15, n = 10000)
+
+
+
+```
+
+
+
+
+
+## Clickstream summary
+
+```{r}
+summary(cls)
+```
+
+
+
+
+
+## Clickstream in Data Frame form
+
+
+* optionally add session IDs
+* Where no absorbing state is specified, "defer" is added as the last step
+
+```{r}
+
+clsdf <- tibble(random_cls=cls) %>% 
+    mutate(cls_string = map_chr(random_cls, function(x) paste(unlist(x), collapse = ","))) %>% 
+    mutate(cls_complete=ifelse(grepl("Defer|Buy", cls_string), cls_string, paste(cls_string, "Defer", sep=",")))
+
+
+
+sessionIDs <- paste0("session_", seq_len(length(cls)))
+
+clsdf$sessionID <- sessionIDs
+
+clsdf %>% dplyr::select(sessionID, cls_complete) %>% head(10)
+
+```
+
+
+
+# EDA
+
+
+
+
+
+
+## Frequent user paths
+
+
+```{r}
+
+clsdf %>% rename(user_path=cls_complete) %>% 
+  count(user_path) %>% 
+  ungroup %>%  
+  mutate(freq=n/sum(n)) %>% 
+  arrange(desc(freq)) %>% 
+  slice(1:20) %>% 
+  mutate_if(is.numeric, round, digits=3) %>%  
+  datatable()
+
+```
+
+
+## Frequent paths to conversion
+
+```{r}
+clsdf %>% rename(page_sequence=cls_complete) %>% 
+  filter(grepl("Buy",page_sequence)) %>% 
+  count(page_sequence) %>% 
+  ungroup %>%  
+  mutate(freq=n/sum(n)) %>% 
+  arrange(desc(freq))  %>% slice(1:20) %>% 
+  mutate_if(is.numeric, round, digits=3) %>% 
+  datatable()
+
+
+
+
+```
+
+## Frequent path to non-conversion
+
+
+
+```{r}
+clsdf %>% rename(page_sequence=cls_complete) %>% 
+  filter(grepl("Defer",page_sequence)) %>% 
+  count(page_sequence) %>% 
+  ungroup %>%  
+  mutate(freq=n/sum(n)) %>% 
+  arrange(desc(freq))  %>% slice(1:20) %>% 
+  mutate_if(is.numeric, round, digits=3) %>% 
+  datatable()
+
+```
+
+
+
+
+
+# Clustering 
+
+
+* This step is optional
+* Helps to improve performance of MC model in the next step 
+
+
+## Prepare object
+
+```{r}
+cls_list <- clsdf %>% mutate(cls=map(cls_complete, function(x) unlist(strsplit(x, split = ",")))) 
+
+
+cls_final <- cls_list$cls
+
+
+class(cls_final) <- "Clickstreams"
+
+
+```
+
+
+## Call k-means algo
+
+
+```{r}
+
+clusters <- clusterClickstreams(clickstreamList = cls_final, order = 1, centers = 2) 
+
+```
+
+show example of the clickstream in the given cluster. 
+
+
+## cluster summary
+
+```{r}
+summary(clusters$clusters[[1]]) 
+```
+
+## cluster-1 sample
+
+
+```{r}
+
+sample(clusters[[1]][[1]],size = 10)
+
+
+```
+
+
+## cluster-2 sample 
+
+```{r}
+
+sample(clusters[[1]][[2]],size = 10)
+
+
+```
+
+
+
+
+# Markov Chain Model
+
+
+* A MC model is applied to fit the data from the second cluster
+
+## fitMarkovChain
+
+```{r}
+
+cluster_two <- clusters$clusters[[2]]
+
+mc <- fitMarkovChain(clickstreamList =cluster_two , order = 1)
+
+summary(mc)
+
+```
+
+## transition probabilities 
+
+```{r}
+print(mc)
+```
+
+
+
+
+
+# Next click prediction 
+
+
+```{r}
+pattern <- new("Pattern", sequence = c("Prod_3", "Prod_1"),
+               absorbingProbabilities = data.frame(Buy = 0.2345288, Defer = 0.7654712))
+
+
+
+resultPattern <- predict(mc, startPattern = pattern, dist = 2)
+
+resultPattern
+
+
+```
+
+
+# Plots
+
+## Directed Network graph
+
+```{r fig.height=10, fig.width=10}
+plot(mc, order = 1, minProbability = 0.09)
+```
+
+
+
+## Heatmap
+
+
+```{r}
+hmPlot(mc )
+
+
+```
+
+## Heatmap for absorption states
+
+```{r}
+hmPlot(mc, absorptionProbability = T )
+```
+
+
+
+# Association rules
+
+##cls to frequencyDF 
+
+
+```{r}
+frequencyDF <- frequencies(cls)
+
+head(frequencyDF, 10)
+
+
+```
+
+## CLs to transactions
+
+```{r}
+trans <- as.transactions(cls)
+
+
+sequences <- as(cspade(trans, parameter = list(support = 0.3)), "data.frame")
+
+
+sequences
+
+
+```
+
+
+
