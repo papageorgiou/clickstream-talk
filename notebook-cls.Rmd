@@ -72,7 +72,7 @@ print(transitions)
 
 ```
 
-# Generate random clickstreams
+## Generate random clickstreams
 
 ```{r }
 
@@ -219,7 +219,6 @@ clusters <- clusterClickstreams(clickstreamList = cls_final, order = 1, centers 
 
 ```
 
-show example of the clickstream in the given cluster. 
 
 
 ## cluster summary
@@ -314,7 +313,7 @@ hmPlot(mc )
 
 ```
 
-## Heatmap for absorption states
+## Heatmap for absorbing states
 
 ```{r}
 hmPlot(mc, absorptionProbability = T )

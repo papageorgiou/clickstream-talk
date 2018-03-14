@@ -153,7 +153,7 @@ clsdf %>% rename(user_path=cls_complete) %>%
 ```
 
 
-## common path to conversion
+## Frequent paths to conversion
 
 ```{r}
 clsdf %>% rename(page_sequence=cls_complete) %>% 
@@ -169,7 +169,7 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
 
 ```
 
-# common path to non-conversion
+# Frequent paths to non-conversion
 
 
 
@@ -187,11 +187,11 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
 
 
 
+# Clustering 
 
-# clustering
 
- 
-
+* This step is optional
+* Helps to improve performance of MC model in the next step 
 
 ## Prepare object
 
@@ -217,7 +217,6 @@ clusters <- clusterClickstreams(clickstreamList = cls_final, order = 1, centers 
 
 ```
 
-show example of the clickstream in the given cluster. 
 
 
 ## cluster summary
@@ -310,7 +309,7 @@ hmPlot(mc )
 
 ```
 
-## Heatmap for absorption states
+## Heatmap for absorbing states
 
 ```{r}
 hmPlot(mc, absorptionProbability = T )

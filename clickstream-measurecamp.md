@@ -12,9 +12,9 @@ Alexandros Papageorgiou
     -   [Clickstream Data Frame](#clickstream-data-frame)
 -   [EDA](#eda)
     -   [Frequent user paths](#frequent-user-paths)
-    -   [common path to conversion](#common-path-to-conversion)
--   [common path to non-conversion](#common-path-to-non-conversion)
--   [clustering](#clustering)
+    -   [Frequent paths to conversion](#frequent-paths-to-conversion)
+-   [Frequent paths to non-conversion](#frequent-paths-to-non-conversion)
+-   [Clustering](#clustering)
     -   [Prepare object](#prepare-object)
     -   [Call k-means algo](#call-k-means-algo)
     -   [cluster summary](#cluster-summary)
@@ -27,7 +27,7 @@ Alexandros Papageorgiou
 -   [Plots](#plots)
     -   [Directed Network graph](#directed-network-graph)
     -   [Heatmap](#heatmap)
-    -   [Heatmap for absorption states](#heatmap-for-absorption-states)
+    -   [Heatmap for absorbing states](#heatmap-for-absorbing-states)
 -   [Association rules](#association-rules)
     -   [cls to frequencyDF](#cls-to-frequencydf)
     -   [CLs to transactions](#cls-to-transactions)
@@ -190,8 +190,8 @@ clsdf %>% rename(user_path=cls_complete) %>%
     ## 19 Catalog,Prod_4,Defer      64. 0.00600
     ## 20 Home,Prod_1,Defer         61. 0.00600
 
-common path to conversion
--------------------------
+Frequent paths to conversion
+----------------------------
 
 ``` r
 clsdf %>% rename(page_sequence=cls_complete) %>% 
@@ -227,8 +227,8 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
     ## 19 Prod_3,Prod_4,Buy            8. 0.00600
     ## 20 Home,Catalog,Prod_4,Buy      7. 0.00500
 
-common path to non-conversion
-=============================
+Frequent paths to non-conversion
+================================
 
 ``` r
 clsdf %>% rename(page_sequence=cls_complete) %>% 
@@ -264,8 +264,11 @@ clsdf %>% rename(page_sequence=cls_complete) %>%
     ## 19 Catalog,Prod_2,About,Defer   53. 0.00600
     ## 20 Home,Prod_3,Defer            51. 0.00600
 
-clustering
+Clustering
 ==========
+
+-   This step is optional
+-   Helps to improve performance of MC model in the next step
 
 Prepare object
 --------------
@@ -286,8 +289,6 @@ Call k-means algo
 ``` r
 clusters <- clusterClickstreams(clickstreamList = cls_final, order = 1, centers = 2) 
 ```
-
-show example of the clickstream in the given cluster.
 
 cluster summary
 ---------------
@@ -487,8 +488,8 @@ hmPlot(mc )
 
 ![](clickstream-measurecamp_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
-Heatmap for absorption states
------------------------------
+Heatmap for absorbing states
+----------------------------
 
 ``` r
 hmPlot(mc, absorptionProbability = T )
