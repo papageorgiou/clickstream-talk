@@ -127,7 +127,7 @@ clsdf %>% dplyr::select(sessionID, cls_complete) %>% head(10)
 
 
 
-# EDA
+# Frequent paths
 
 
 
@@ -294,7 +294,7 @@ resultPattern
 ```
 
 
-# Plots
+# Visualisation
 
 ## Directed Network graph
 
@@ -321,32 +321,8 @@ hmPlot(mc, absorptionProbability = T )
 
 
 
-# Association rules
-
-##cls to frequencyDF 
 
 
-```{r}
-frequencyDF <- frequencies(cls)
-
-head(frequencyDF, 10)
-
-
-```
-
-## CLs to transactions
-
-```{r}
-trans <- as.transactions(cls)
-
-
-sequences <- as(cspade(trans, parameter = list(support = 0.3)), "data.frame")
-
-
-sequences
-
-
-```
 
 
 

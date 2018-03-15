@@ -10,7 +10,7 @@ Alexandros Papageorgiou
 -   [Generate random clickstream](#generate-random-clickstream)
     -   [Cls summary](#cls-summary)
     -   [Clickstream Data Frame](#clickstream-data-frame)
--   [EDA](#eda)
+-   [Frequent Paths](#frequent-paths)
     -   [Frequent user paths](#frequent-user-paths)
     -   [Frequent paths to conversion](#frequent-paths-to-conversion)
 -   [Frequent paths to non-conversion](#frequent-paths-to-non-conversion)
@@ -24,13 +24,10 @@ Alexandros Papageorgiou
     -   [fitMarkovChain](#fitmarkovchain)
     -   [transition probabilities](#transition-probabilities)
 -   [Next click pred](#next-click-pred)
--   [Plots](#plots)
+-   [Visualisation](#visualisation)
     -   [Directed Network graph](#directed-network-graph)
     -   [Heatmap](#heatmap)
     -   [Heatmap for absorbing states](#heatmap-for-absorbing-states)
--   [Association rules](#association-rules)
-    -   [cls to frequencyDF](#cls-to-frequencydf)
-    -   [CLs to transactions](#cls-to-transactions)
 
 Set-up
 ======
@@ -150,8 +147,8 @@ clsdf %>% dplyr::select(sessionID, cls_complete) %>% head(10)
     ##  9 session_9  Catalog,Catalog,Prod_4,Prod_1,Prod_4,Defer                  
     ## 10 session_10 Prod_1,Prod_4,Home,Prod_2,Home,Prod_2,Prod_3,Prod_1,Home,Pr~
 
-EDA
-===
+Frequent Paths
+==============
 
 Frequent user paths
 -------------------
@@ -467,8 +464,8 @@ resultPattern
     ##          Buy     Defer
     ## 1 0.02601113 0.9739889
 
-Plots
-=====
+Visualisation
+=============
 
 Directed Network graph
 ----------------------
@@ -496,54 +493,3 @@ hmPlot(mc, absorptionProbability = T )
 ```
 
 ![](clickstream-measurecamp_files/figure-markdown_github/unnamed-chunk-20-1.png)
-
-Association rules
-=================
-
-cls to frequencyDF
-------------------
-
-``` r
-frequencyDF <- frequencies(cls)
-
-head(frequencyDF, 10)
-```
-
-    ##    Prod_3 Buy Prod_1 Home Defer Prod_4 About Catalog Prod_2
-    ## 1       1   1      0    0     0      0     0       0      0
-    ## 2       1   1      1    0     0      0     0       0      0
-    ## 3       0   0      0    1     1      0     0       0      0
-    ## 4       2   1      0    0     0      1     0       0      0
-    ## 5       0   0      1    0     1      1     1       1      0
-    ## 6       0   0      0    0     1      1     1       1      0
-    ## 7       0   0      0    0     1      0     2       2      0
-    ## 8       1   0      0    1     1      2     1       2      0
-    ## 9       0   0      1    0     1      2     0       2      0
-    ## 10      1   0      4    4     0      3     0       0      2
-
-CLs to transactions
--------------------
-
-``` r
-trans <- as.transactions(cls)
-
-
-sequences <- as(cspade(trans, parameter = list(support = 0.3)), "data.frame")
-
-
-sequences
-```
-
-    ##              sequence support
-    ## 1           <{About}>  0.4653
-    ## 2         <{Catalog}>  0.3511
-    ## 3           <{Defer}>  0.8418
-    ## 4            <{Home}>  0.5089
-    ## 5          <{Prod_1}>  0.4110
-    ## 6          <{Prod_2}>  0.3446
-    ## 7          <{Prod_3}>  0.3781
-    ## 8          <{Prod_4}>  0.3783
-    ## 9   <{About},{Defer}>  0.4445
-    ## 10   <{Home},{Defer}>  0.4340
-    ## 11 <{Prod_1},{Defer}>  0.3194
-    ## 12 <{Prod_2},{Defer}>  0.3002
